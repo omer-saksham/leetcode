@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define HASH_SIZE 100003
+
+typedef struct Node {
+    int key;
+    int count;
+    struct Node* next;
+} Node;
+
+Node* hashTable[HASH_SIZE];
+
+int hash(int key) {
+    return (key % HASH_SIZE + HASH_SIZE) % HASH_SIZE;
+}
+
+void insert(int key) {
+    int h = hash(key);
+    Node* node = hashTable[h];
+    while (node) {
+        if (node->key == key) {
+            node->count++;
+            return;
+        }
+        node = node->next;
+    }
+    node = malloc(sizeof(Node));
+    node->key = key;
+    node->count = 1;
+    node->next = hashTable[h];
+    hashTable[h] = node;
+}
+
+int get(int key) {
+    int h = hash(key);
+    Node* node = hashTable[h];
+    while (node) {
+        if (node->key == key) return node->count;
+        node = node->next;
+    }
+    return 0;
+}
+
+int fourSumCount(int* A, int ASize, int* B, int BSize, int* C, int CSize, int* D, int DSize) {
+    for (int i = 0; i < HASH_SIZE; i++) hashTable[i] = NULL;
+
+    for (int i = 0; i < ASize; i++) {
+        for (int j = 0; j < BSize; j++) {
+            insert(A[i] + B[j]);
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < CSize; i++) {
+        for (int j = 0; j < DSize; j++) {
+            count += get(-(C[i] + D[j]));
+        }
+    }
+
+    return count;
+}
