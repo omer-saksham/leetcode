@@ -1,0 +1,16 @@
+#include <stdlib.h> 
+#include <stdio.h>  
+
+int compareIntegers(const void* a, const void* b) {
+    int int_a = *(const int*)a;
+    int int_b = *(const int*)b;
+    return int_a - int_b;
+}
+
+int findKthLargest(int* nums, int numsSize, int k) {
+    
+    qsort(nums, numsSize, sizeof(int), compareIntegers);
+
+    
+    return nums[numsSize - k];
+}
