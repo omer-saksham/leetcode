@@ -1,0 +1,88 @@
+#include <stdlib.h>
+
+#define TABLE_SIZE 10007
+
+
+typedef struct node {
+    int value;
+    struct node* next;
+} Node;
+
+typedef struct {
+    Node* buckets[TABLE_SIZE];
+} HashTable;
+
+Node* createNode(int value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        exit(1); 
+    }
+    newNode->value = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void initHashTable(HashTable* table) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        table->buckets[i] = NULL;
+    }
+}
+
+
+int getHash(int key) {
+    
+    return abs(key) % TABLE_SIZE;
+}
+
+int searchAndInsert(HashTable* table, int key) {
+    int index = getHash(key);
+    Node* current = table->buckets[index];
+
+    while (current != NULL) {
+        if (current->value == key) {
+            return 1; 
+        }
+        current = current->next;
+    }
+
+    Node* newNode = createNode(key);
+    newNode->next = table->buckets[index];
+    table->buckets[index] = newNode;
+    return 0; 
+}
+
+void freeHashTable(HashTable* table) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* current = table->buckets[i];
+        while (current != NULL) {
+            Node* temp = current;
+            current = current->next;
+            free(temp);
+        }
+    }
+}
+
+bool containsDuplicate(int* nums, int numsSize) {
+    
+    if (numsSize <= 1) {
+        return false;
+    }
+
+    HashTable* table = (HashTable*)malloc(sizeof(HashTable));
+    if (table == NULL) {
+        return false; 
+    }
+    initHashTable(table);
+
+    for (int i = 0; i < numsSize; i++) {
+        if (searchAndInsert(table, nums[i]) == 1) {
+            freeHashTable(table); 
+            free(table);
+            return true;
+        }
+    }
+
+    freeHashTable(table); 
+    free(table);
+    return false;
+}
