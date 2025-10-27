@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+int partitionDisjoint(int* nums, int numsSize) {
+    int left_max = nums[0];
+    int cur_max = nums[0];
+    int len = 1;
+
+    for (int i = 1; i < numsSize; i++) {
+        cur_max = (nums[i] > cur_max) ? nums[i] : cur_max;
+
+        if (nums[i] < left_max) {
+            left_max = cur_max;
+            len = i + 1;
+        }
+    }
+
+    return len;
+}
