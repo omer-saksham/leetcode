@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int* sortedSquares(int* nums, int numsSize, int* returnSize) {
+    *returnSize = numsSize;
+    int *res = (int*)malloc(numsSize * sizeof(int));
+    int l = 0, r = numsSize - 1, pos = numsSize - 1;
+
+    while (l <= r) {
+        int leftSq = nums[l] * nums[l];
+        int rightSq = nums[r] * nums[r];
+
+        if (leftSq > rightSq) {
+            res[pos--] = leftSq;
+            l++;
+        } else {
+            res[pos--] = rightSq;
+            r--;
+        }
+    }
+
+    return res;
+}
+
