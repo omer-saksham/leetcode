@@ -1,0 +1,17 @@
+#include <stdbool.h>
+#include <stddef.h>
+
+static long long wordValue(const char *w) {
+    long long val = 0;
+    for (const char *p = w; *p; ++p) {
+        val = val * 10 + (long long)(*p - 'a');  // 'a' -> 0, 'b' -> 1, ...
+    }
+    return val;
+}
+
+bool isSumEqual(char * firstWord, char * secondWord, char * targetWord){
+    long long a = wordValue(firstWord);
+    long long b = wordValue(secondWord);
+    long long c = wordValue(targetWord);
+    return (a + b) == c;
+}
